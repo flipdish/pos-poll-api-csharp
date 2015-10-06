@@ -7,6 +7,8 @@ using System.Net.Security;
 using System.Security.Cryptography.X509Certificates;
 using System.Text;
 using System.Threading.Tasks;
+using FlipdishPosPollApi.Entities;
+using Newtonsoft.Json;
 
 namespace FlipdishPosPollApi
 {
@@ -16,9 +18,9 @@ namespace FlipdishPosPollApi
         {
             WebRequest req = WebRequest.Create(uri);
             req.Timeout = timeoutInMs;
-           
+
             //ServicePointManager.ServerCertificateValidationCallback += ValidateRemoteCertificate;
-            
+
             WebResponse resp = req.GetResponse();
             var sr = new System.IO.StreamReader(resp.GetResponseStream());
             return sr.ReadToEnd().Trim();
@@ -47,20 +49,37 @@ namespace FlipdishPosPollApi
             return result;
         }
 
+        public static ApiResult HttpPostApiResult(string uri, string parameters)
+        {
+            string s = HttpPost(uri, parameters);
+            ApiResult apiResult;
+            try
+            {
+                apiResult = JsonConvert.DeserializeObject<ApiResult>(s);
+            }
+            catch (Exception ex)
+            {
+                apiResult = new ApiResult { Success = false, StackTrace = ex.ToString() };
+            }
+
+            return apiResult;
+        }
+
         public static string HttpPost(string uri, string parameters)
         {
             WebRequest req = WebRequest.Create(uri);
 
             ServicePointManager.ServerCertificateValidationCallback += ValidateRemoteCertificate;
-          
+
             req.ContentType = "application/x-www-form-urlencoded";
             req.Method = "POST";
 
             byte[] bytes = System.Text.Encoding.ASCII.GetBytes(parameters);
             req.ContentLength = bytes.Length;
             System.IO.Stream os = req.GetRequestStream();
-            os.Write(bytes, 0, bytes.Length); 
+            os.Write(bytes, 0, bytes.Length);
             os.Close();
+
             System.Net.WebResponse resp = req.GetResponse();
             if (resp == null) return null;
             var sr = new System.IO.StreamReader(resp.GetResponseStream());
@@ -100,7 +119,7 @@ namespace FlipdishPosPollApi
                 X509Chain chain,
                 SslPolicyErrors policyErrors)
         {
-            return true;           
+            return true;
         }
 
     }

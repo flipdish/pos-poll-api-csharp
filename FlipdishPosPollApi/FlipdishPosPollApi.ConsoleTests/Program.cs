@@ -29,9 +29,17 @@ namespace FlipdishPosPollApi.ConsoleTests
             }
             else
             {
-
                 Console.WriteLine("Found {0} order with ID {1} for {2} {3}.", flipdishOrder.DeliveryType, flipdishOrder.OrderId, flipdishOrder.TotalAmount, flipdishOrder.Currency);
+
+                Console.WriteLine("Press [enter] to call GetOrder for order {0}", flipdishOrder.OrderId); 
+                Console.ReadLine();
+                flipdishOrder = flipdishPollApiClient.GetOrder(physicalRestaurantId, apiKey, flipdishOrder.OrderId);
+
+                Console.WriteLine("Got {0} order with ID {1} for {2} {3}.", flipdishOrder.DeliveryType, flipdishOrder.OrderId, flipdishOrder.TotalAmount, flipdishOrder.Currency);
+
             }
+
+
             Console.WriteLine();
             Console.WriteLine("Press {enter} to exit");
             Console.ReadLine();
