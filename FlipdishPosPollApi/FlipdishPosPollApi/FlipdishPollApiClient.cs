@@ -14,7 +14,7 @@ namespace FlipdishPosPollApi
         private static string LocalApiEndpoint = "http://localhost/pollapi";
         public FlipdishOrder RequestNewOrder(int physicalRestaurantId, string key)
         {
-            string url = string.Format("{0}/RequestNewOrder?physicalRestaurantId={1}&apiKey={2}", LocalApiEndpoint, physicalRestaurantId, key);
+            string url = string.Format("{0}/RequestNewOrder?physicalRestaurantId={1}&apiKey={2}", TestApiEndpoint, physicalRestaurantId, key);
 
             Console.WriteLine("Making HTTP Request: {0}", url);
 
