@@ -1,0 +1,148 @@
+FORMAT: 1A
+HOST: https://flipdish.ie/pollapi
+
+# Flipdish POS
+
+This API is intended for POS systems to receive orders from Flipdish. 
+This is a polling API. POS system will need to poll our endpoint periodially (we recommend every 10 seconds) to check for new orders.
+
+If an endpoint is not pinged for 5 minutes it will automatically be disabled to prevent orders being accepted that can not be fulfilled. The restaurant will automatically be enabled again when it is pinged again. To ping a restaurant, make the `RequestNewOrder` request.
+
+## API 
+
+Each HTTP request must include the following required values
+
++ `physicalRestaurantId` (int)
++ `key` (string)
+
+
+Responses will be in JSON or XML format. JSON will be returned by default. Please supply `format=xml` to receive XML format.
++ `format` (string) 'xml' or 'json'(default)
+
+Your production endpoint is 
+`https://flipdish.ie/pollapi`
+
+
+All requests can be sent in either `application/json` or `application/x-www-form-urlencoded` format. 
+For example
++ Request (application/x-www-form-urlencoded)
+
+        key1%3Dvalue1&key2%3Dvalue2
+
+or 
++ Request (application/json)
+
+ 
+        {
+            "key1": "value1",
+            "key2": "value2",
+        }
+
+Examples are in (application/json) format
+
+
+## Check for new orders [/RequestNewOrder]
+
+### Request a new order [POST]
+
++ Request (application/json)
+
+        {
+            "key": "YOUR-API-KEY",
+            "physicalRestaurantId": "YOUR-PHYSICAL-RESTAURANT-ID",
+           
+        }
+
+
++ Response 200 (application/json)
+
+
+        {
+            "NewOrder": true,
+            "OrderItem": {
+                "OrderId": 1,
+                "OrderStatus": 0
+                "DeliveryType": 0,
+                "IsPaid": true,
+                "DeliveryFee": 2.50,
+                "FoodPrice": 20.00,
+                "TotalPrice": 22.50,
+                "PrinterHtml": "<html>...</html>",
+                "ScreenHtml": "<html>...</html>"
+            }
+        }
+
+
+
++ Response 200 (application/json)
+
+        {
+            "NewOrder": false,
+            "OrderItem": null
+        }
+
+## Get an order [/GetOrder/{orderId}?physicalRestaurantId={physicalRestaurantId}&key={key}]
+
+### Request a particular order [GET]
+
+
++ Response 200 (application/json)
+
+        {
+            "OrderId": 1,
+            "OrderStatus": 0
+            "DeliveryType": 0,
+            "IsPaid": true,
+            "DeliveryFee": 2.50,
+            "FoodPrice": 20.00,
+            "TotalPrice": 22.50,
+            "PrinterHtml": "<html>...</html>",
+            "ScreenHtml": "<html>...</html>"
+        }
+
+
+## Accept an order [/AcceptOrder]
+
+### Accept an order [POST]
+
++ Request (application/json)
+
+        {
+            "key": "YOUR-API-KEY",
+            "physicalRestaurantId": "YOUR-PHYSICAL-RESTAURANT-ID",
+            "orderId": 1
+        }
+
+
++ Response 200 (application/json)
+
+        {
+            "AcceptOrderResult": 0, // 0 = accepted. 1 = already accepted. 2 = already rejected. 3 = error
+            "OrderId": 1,
+            "ErrorMessage": null,
+        }
+
+
+
+## Reject an order [/RejectOrder]
+
+### Reject an order [POST]
+
++ Request (application/json)
+
+        {
+            "key": "YOUR-API-KEY",
+            "physicalRestaurantId": "YOUR-PHYSICAL-RESTAURANT-ID",
+            "orderId": 1
+        }
+
+
++ Response 200 (application/json)
+
+        {
+            "RejectOrderResult": 0, // 0 = rejected. 1 = already accepted. 2 = already rejected. 3 = error
+            "OrderId": 1,
+            "ErrorMessage": null,
+        }
+
+
