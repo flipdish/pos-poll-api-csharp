@@ -10,8 +10,8 @@ namespace FlipdishPosPollApi.ConsoleTests
     {
         static void Main(string[] args)
         {
-            string apiKey = "qwqw";
-            int physicalRestaurantId = 1570;
+            string apiKey = "test-key";
+            int physicalRestaurantId = 19;
             var flipdishPollApiClient = new FlipdishPollApiClient();
 
             Console.WriteLine("Let's test out the API");
