@@ -1,8 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using FlipdishPosPollApi.Entities;
 
 namespace FlipdishPosPollApi
@@ -11,7 +8,7 @@ namespace FlipdishPosPollApi
     {
         public int OrderId { get; set; }
         public int VirtualRestaurantId { get; set; }
-        public int? PhysicalRestaurantId { get; set; }
+        public int PhysicalRestaurantId { get; set; }
         public DeliveryType DeliveryType { get; set; }
         public string RestaurantName { get; set; }
         public decimal TipAmount { get; set; }
@@ -24,6 +21,9 @@ namespace FlipdishPosPollApi
         public int? UserRating { get; set; }
 
 
+        public string PrinterHtml { get; set; }
+        public string ScreenHtml { get; set; }
+
         public string PaymentAccountDescription { get; set; } // Visa **** 2371. or Apple Pay. or Cash
         public List<PreviousOrderItemDm> PreviousOrderItemVms { get; set; }
 
@@ -33,7 +33,7 @@ namespace FlipdishPosPollApi
 
         public DateTime? TsOrderPlaced { get; set; }
 
-        public string DeliveryLocationAddressString { get; set; }// eg. 20 Waterloo Road
+        public string DeliveryLocationAddressString { get; set; } // eg. 20 Waterloo Road
 
         public int? DeliveryLocationId { get; set; }
         public string DeliveryInstructions { get; set; }
@@ -56,6 +56,7 @@ namespace FlipdishPosPollApi
         public int? AmendmentForOrderId { get; set; }
 
         public bool HasAmendmentOrder { get; set; }
+
         #endregion
     }
 }

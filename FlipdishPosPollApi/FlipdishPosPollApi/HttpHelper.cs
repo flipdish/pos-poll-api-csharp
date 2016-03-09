@@ -6,7 +6,6 @@ using System.Net;
 using System.Net.Security;
 using System.Security.Cryptography.X509Certificates;
 using System.Text;
-using System.Threading.Tasks;
 using FlipdishPosPollApi.Entities;
 using Newtonsoft.Json;
 
@@ -16,24 +15,26 @@ namespace FlipdishPosPollApi
     {
         public static string HttpGet(string uri, int timeoutInMs = 6000)
         {
-            WebRequest req = WebRequest.Create(uri);
+            var req = WebRequest.Create(uri);
             req.Timeout = timeoutInMs;
 
             //ServicePointManager.ServerCertificateValidationCallback += ValidateRemoteCertificate;
 
-            WebResponse resp = req.GetResponse();
-            var sr = new System.IO.StreamReader(resp.GetResponseStream());
+            var resp = req.GetResponse();
+            var sr = new StreamReader(resp.GetResponseStream());
             return sr.ReadToEnd().Trim();
         }
 
-        public static string HttpPost(string uri, Dictionary<string, string> parameters, List<KeyValuePair<string, string>> sensitiveStrings = null)
+        public static string HttpPost(string uri, Dictionary<string, string> parameters,
+            List<KeyValuePair<string, string>> sensitiveStrings = null)
         {
             var asList = parameters.ToList();
 
             return HttpPost(uri, asList, sensitiveStrings);
         }
 
-        public static string HttpPost(string uri, List<KeyValuePair<string, string>> parameters, List<KeyValuePair<string, string>> sensitiveStrings = null)
+        public static string HttpPost(string uri, List<KeyValuePair<string, string>> parameters,
+            List<KeyValuePair<string, string>> sensitiveStrings = null)
         {
             var sb = new StringBuilder();
 
@@ -42,16 +43,16 @@ namespace FlipdishPosPollApi
                 sb.Append(string.Format("{0}={1}&", kvp.Key, kvp.Value));
             }
 
-            string s = sb.ToString().Trim().TrimEnd('&');
+            var s = sb.ToString().Trim().TrimEnd('&');
 
-            string result = HttpPost(uri, s);
+            var result = HttpPost(uri, s);
 
             return result;
         }
 
         public static ApiResult HttpPostApiResult(string uri, string parameters)
         {
-            string s = HttpPost(uri, parameters);
+            var s = HttpPost(uri, parameters);
             ApiResult apiResult;
             try
             {
@@ -59,7 +60,7 @@ namespace FlipdishPosPollApi
             }
             catch (Exception ex)
             {
-                apiResult = new ApiResult { Success = false, StackTrace = ex.ToString() };
+                apiResult = new ApiResult {Success = false, StackTrace = ex.ToString()};
             }
 
             return apiResult;
@@ -67,32 +68,33 @@ namespace FlipdishPosPollApi
 
         public static string HttpPost(string uri, string parameters)
         {
-            WebRequest req = WebRequest.Create(uri);
+            var req = WebRequest.Create(uri);
 
             ServicePointManager.ServerCertificateValidationCallback += ValidateRemoteCertificate;
 
             req.ContentType = "application/x-www-form-urlencoded";
             req.Method = "POST";
 
-            byte[] bytes = System.Text.Encoding.ASCII.GetBytes(parameters);
+            var bytes = Encoding.ASCII.GetBytes(parameters);
             req.ContentLength = bytes.Length;
-            System.IO.Stream os = req.GetRequestStream();
+            var os = req.GetRequestStream();
             os.Write(bytes, 0, bytes.Length);
             os.Close();
 
-            System.Net.WebResponse resp = req.GetResponse();
+            var resp = req.GetResponse();
             if (resp == null) return null;
-            var sr = new System.IO.StreamReader(resp.GetResponseStream());
+            var sr = new StreamReader(resp.GetResponseStream());
             return sr.ReadToEnd().Trim();
         }
 
-        public static Dictionary<string, string> ParseAmpersandSeparatedPairsToLowerCaseKeys(string ampersandSeparatedPairs)
+        public static Dictionary<string, string> ParseAmpersandSeparatedPairsToLowerCaseKeys(
+            string ampersandSeparatedPairs)
         {
             var result = new Dictionary<string, string>();
 
             if (!string.IsNullOrEmpty(ampersandSeparatedPairs))
             {
-                string[] splitByAmpersand = ampersandSeparatedPairs.Split('&');
+                var splitByAmpersand = ampersandSeparatedPairs.Split('&');
 
                 if (splitByAmpersand.Length > 0)
                 {
@@ -106,7 +108,6 @@ namespace FlipdishPosPollApi
                         var val = pairString.Substring(indexOfEqualsSign + 1);
                         result[key.ToLower().Trim()] = val.Trim();
                     }
-
                 }
             }
 
@@ -114,13 +115,12 @@ namespace FlipdishPosPollApi
         }
 
         private static bool ValidateRemoteCertificate(
-                object sender,
-                X509Certificate certificate,
-                X509Chain chain,
-                SslPolicyErrors policyErrors)
+            object sender,
+            X509Certificate certificate,
+            X509Chain chain,
+            SslPolicyErrors policyErrors)
         {
             return true;
         }
-
     }
 }
