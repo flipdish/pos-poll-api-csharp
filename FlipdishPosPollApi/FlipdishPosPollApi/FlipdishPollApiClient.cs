@@ -10,7 +10,7 @@ namespace FlipdishPosPollApi
         private static readonly string TestApiEndpoint = "https://flipdishstaging.azurewebsites.net/pollapi";
         private static string LocalApiEndpoint = "http://localhost/pollapi";
 
-        private static readonly string ApiEndpoint = TestApiEndpoint;
+        private static readonly string ApiEndpoint = LocalApiEndpoint;
 
         public FlipdishOrder RequestNewOrder(int physicalRestaurantId, string key)
         {
